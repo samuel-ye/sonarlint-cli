@@ -36,8 +36,14 @@ public class ConsoleReport implements Reporter {
   public static final String CONSOLE_REPORT_ENABLED_KEY = "sonar.issuesReport.console.enable";
   private static final int LEFT_PAD = 10;
 
-  ConsoleReport() {
+  private boolean verboseConsoleLog;
 
+  ConsoleReport() {
+    this(false);
+  }
+
+  ConsoleReport(boolean verboseConsoleLog) {
+    this.verboseConsoleLog = verboseConsoleLog;
   }
 
   private static class Report {
@@ -48,8 +54,20 @@ public class ConsoleReport implements Reporter {
     int minorIssues = 0;
     int infoIssues = 0;
 
-    public void process(Issue issue) {
+    public void process(Issue issue, StringBuilder sb, boolean verboseConsoleLog) {
       totalIssues++;
+      if (verboseConsoleLog) {
+        sb.append(
+          String.format(
+            "{%s} {%s} {%d:%d - %d:%d} {%s}\n",
+            issue.getInputFile().getPath(),
+            issue.getSeverity(),
+            issue.getStartLine(),
+            issue.getStartLineOffset(),
+            issue.getEndLine(),
+            issue.getEndLineOffset(),
+            issue.getMessage()));
+      }
       switch (issue.getSeverity()) {
         case "BLOCKER":
           blockerIssues++;
@@ -79,14 +97,14 @@ public class ConsoleReport implements Reporter {
   @Override
   public void execute(String projectName, Date date, Collection<Trackable> trackables, AnalysisResults result, Function<String, RuleDetails> ruleDescriptionProducer) {
     Report r = new Report();
+    StringBuilder sb = new StringBuilder();
     for (Trackable trackable : trackables) {
-      r.process(trackable.getIssue());
+      r.process(trackable.getIssue(), sb, verboseConsoleLog);
     }
-    printReport(r, result);
+    printReport(r, result, sb);
   }
 
-  public void printReport(Report r, AnalysisResults result) {
-    StringBuilder sb = new StringBuilder();
+  public void printReport(Report r, AnalysisResults result, StringBuilder sb) {
 
     sb.append("\n\n" + HEADER + "\n\n");
     if (result.fileCount() == 0) {
