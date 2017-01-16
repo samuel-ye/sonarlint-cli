@@ -19,14 +19,6 @@
  */
 package org.sonarlint.cli.report;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,6 +28,15 @@ import org.sonarsource.sonarlint.core.client.api.common.analysis.AnalysisResults
 import org.sonarsource.sonarlint.core.client.api.common.analysis.Issue;
 import org.sonarsource.sonarlint.core.tracking.IssueTrackable;
 import org.sonarsource.sonarlint.core.tracking.Trackable;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -103,7 +104,9 @@ public class ConsoleReportTest {
     issues.add(createTestIssue("comp1", "rule", "INFO", 20));
     issues.add(createTestIssue("comp1", "rule", "BLOCKER", 20));
 
-    verboseReport.execute(PROJECT_NAME, DATE, issues, result, k -> null);
+    List<Trackable> trackables = toTrackables(issues);
+
+    verboseReport.execute(PROJECT_NAME, DATE, trackables, result, k -> null);
 
     stdOut.flush();
     assertThat(getLog(out)).contains("SonarLint Report");
