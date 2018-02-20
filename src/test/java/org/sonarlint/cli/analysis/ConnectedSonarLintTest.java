@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.sonarlint.cli.config.SonarQubeServer;
 import org.sonarlint.cli.report.ReportFactory;
+import org.sonarsource.sonarlint.core.client.api.common.ProgressMonitor;
 import org.sonarsource.sonarlint.core.client.api.common.RuleDetails;
 import org.sonarsource.sonarlint.core.client.api.common.analysis.ClientInputFile;
 import org.sonarsource.sonarlint.core.client.api.common.analysis.Issue;
@@ -62,6 +63,7 @@ import static org.mockito.Mockito.when;
 public class ConnectedSonarLintTest {
   private ConnectedSonarLintEngine engine;
   private ConnectedSonarLint sonarLint;
+  private ProgressMonitor progressMonitor;
 
   private static AtomicInteger counter = new AtomicInteger();
 
@@ -81,8 +83,8 @@ public class ConnectedSonarLintTest {
     when(engine.allModulesByKey()).thenReturn(getModulesByKey("project1"));
     sonarLint.start(true);
 
-    verify(engine).update(any(ServerConfiguration.class));
-    verify(engine).updateModule(any(ServerConfiguration.class), eq("project1"));
+    verify(engine).update(any(ServerConfiguration.class), progressMonitor);
+    verify(engine).updateModule(any(ServerConfiguration.class), eq("project1"), progressMonitor);
   }
 
   @Test
@@ -90,8 +92,8 @@ public class ConnectedSonarLintTest {
     when(engine.allModulesByKey()).thenReturn(getModulesByKey("project1"));
     sonarLint.start(false);
 
-    verify(engine).update(any(ServerConfiguration.class));
-    verify(engine).updateModule(any(ServerConfiguration.class), eq("project1"));
+    verify(engine).update(any(ServerConfiguration.class), progressMonitor);
+    verify(engine).updateModule(any(ServerConfiguration.class), eq("project1"), progressMonitor);
   }
 
   @Test
@@ -102,8 +104,8 @@ public class ConnectedSonarLintTest {
     when(engine.getGlobalStorageStatus()).thenReturn(status);
     sonarLint.start(false);
 
-    verify(engine).update(any(ServerConfiguration.class));
-    verify(engine).updateModule(any(ServerConfiguration.class), eq("project1"));
+    verify(engine).update(any(ServerConfiguration.class), progressMonitor);
+    verify(engine).updateModule(any(ServerConfiguration.class), eq("project1"), progressMonitor);
   }
 
   @Test
@@ -114,7 +116,7 @@ public class ConnectedSonarLintTest {
     when(engine.getGlobalStorageStatus()).thenReturn(status);
     sonarLint.start(false);
 
-    verify(engine).updateModule(any(ServerConfiguration.class), eq("project1"));
+    verify(engine).updateModule(any(ServerConfiguration.class), eq("project1"), progressMonitor);
     verify(engine).allModulesByKey();
     verify(engine).getGlobalStorageStatus();
     verify(engine).getModuleStorageStatus("project1");
@@ -188,7 +190,7 @@ public class ConnectedSonarLintTest {
     verify(engine).allModulesByKey();
     verify(engine).getGlobalStorageStatus();
     verify(engine).getModuleStorageStatus(moduleKey);
-    verify(engine).updateModule(any(), eq(moduleKey));
+    verify(engine).updateModule(any(), eq(moduleKey), progressMonitor);
     verifyNoMoreInteractions(engine);
   }
 

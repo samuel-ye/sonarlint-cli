@@ -43,8 +43,7 @@
   <properties>
     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
     <gitRepositoryName>sonarlint-cli</gitRepositoryName>
-    <sonarlint.version>2.9.0.276</sonarlint.version>
-    <sonarlintCore.version>2.9-SNAPSHOT</sonarlintCore.version>
+    <sonarlint.version>3.1.0.1</sonarlint.version>
     <sonar.java.version>4.3.0.7717</sonar.java.version>
     <sonar.javascript.version>2.18.0.3454</sonar.javascript.version>
     <sonar.php.version>2.9.1.1705</sonar.php.version>
@@ -55,7 +54,7 @@
     <dependency>
       <groupId>org.sonarsource.sonarlint.core</groupId>
       <artifactId>sonarlint-core</artifactId>
-      <version>${sonarlintCore.version}</version>
+      <version>${sonarlint.version}</version>
     </dependency>
     <dependency>
       <groupId>org.sonarsource.sonarlint.core</groupId>

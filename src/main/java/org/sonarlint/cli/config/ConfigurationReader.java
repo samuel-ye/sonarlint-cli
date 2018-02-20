@@ -19,17 +19,16 @@
  */
 package org.sonarlint.cli.config;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
+
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang.StringUtils;
 
 public class ConfigurationReader {
   private static final String FAIL_PARSE_JSON = "Failed to parse JSON file: ";
@@ -62,7 +61,7 @@ public class ConfigurationReader {
 
   private static String getContents(Path filePath) {
     try {
-      return Files.toString(filePath.toFile(), Charsets.UTF_8);
+      return FileUtils.readFileToString(filePath.toFile(), Charsets.UTF_8);
     } catch (IOException e) {
       throw new IllegalStateException("Error reading configuration file: " + filePath.toAbsolutePath(), e);
     }
