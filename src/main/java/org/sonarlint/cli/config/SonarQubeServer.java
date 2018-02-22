@@ -22,6 +22,7 @@ package org.sonarlint.cli.config;
 public class SonarQubeServer {
   private String id;
   private String url;
+  private String organizationKey;
   private String token;
   private String login;
   private String password;
@@ -32,6 +33,10 @@ public class SonarQubeServer {
 
   public String url() {
     return url;
+  }
+
+  public String organizationKey() {
+    return organizationKey;
   }
 
   public String token() {

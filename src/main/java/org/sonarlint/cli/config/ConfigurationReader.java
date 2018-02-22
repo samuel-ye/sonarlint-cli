@@ -89,11 +89,11 @@ public class ConfigurationReader {
           throw new IllegalStateException("Invalid SonarQube servers configuration: server URL must be defined. Check the configuration in: " + configFilePath);
         }
 
-        if (serverUrls.contains(s.url())) {
-          throw new IllegalStateException("Invalid SonarQube servers configuration: Each server configured must have a unique URL. Check the configuration in: " + configFilePath);
+        if (serverUrls.contains(s.url() + "-" + s.organizationKey())) {
+          throw new IllegalStateException("Invalid SonarQube servers configuration: Each server configured must have a unique URL + organizationKey pair. Check the configuration in: " + configFilePath);
         }
 
-        serverUrls.add(s.url());
+        serverUrls.add(s.url() + "-" + s.organizationKey());
       }
     }
     return globalConfig;

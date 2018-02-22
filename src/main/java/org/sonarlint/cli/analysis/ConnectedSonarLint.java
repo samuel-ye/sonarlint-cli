@@ -120,6 +120,7 @@ public class ConnectedSonarLint extends SonarLint {
   private static ServerConfiguration getServerConfiguration(SonarQubeServer server) {
     ServerConfiguration.Builder serverConfigBuilder = ServerConfiguration.builder()
       .url(server.url())
+      .organizationKey(server.organizationKey())
       .userAgent("SonarLint CLI " + SystemInfo.getVersion());
 
     String token = server.token();
