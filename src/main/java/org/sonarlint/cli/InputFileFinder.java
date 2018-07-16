@@ -107,7 +107,7 @@ public class InputFileFinder {
       boolean isExcluded = excludeMatcher.matches(absoluteFilePath) || excludeMatcher.matches(relativeFilePath);
       if (isSrc && !isExcluded) {
         boolean isTest = testsMatcher.matches(absoluteFilePath) || testsMatcher.matches(relativeFilePath);
-        files.add(new DefaultClientInputFile(absoluteFilePath, isTest, charset));
+        files.add(new DefaultClientInputFile(absoluteFilePath, relativeFilePath, isTest, charset));
       }
 
       return super.visitFile(absoluteFilePath, attrs);
@@ -126,13 +126,16 @@ public class InputFileFinder {
 
   public static class DefaultClientInputFile implements ClientInputFile {
     private final Path path;
+    private final Path relativePath;
     private final boolean test;
     private final Charset charset;
 
-    public DefaultClientInputFile(Path path, boolean test, Charset charset) {
+    public DefaultClientInputFile(Path path, Path relativePath, boolean test, Charset charset) {
       this.path = path;
       this.test = test;
       this.charset = charset;
+      this.relativePath = relativePath;
+
     }
 
     @Override
@@ -163,6 +166,11 @@ public class InputFileFinder {
     @Override
     public String contents() throws IOException {
       return new String(Files.readAllBytes(path), charset);
+    }
+
+    @Override
+    public String relativePath() {
+      return relativePath.toString();
     }
   }
 }

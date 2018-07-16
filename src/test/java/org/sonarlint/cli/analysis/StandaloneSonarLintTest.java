@@ -71,7 +71,8 @@ public class StandaloneSonarLintTest {
   public void run() throws IOException {
     InputFileFinder fileFinder = mock(InputFileFinder.class);
     Path inputFile = temp.newFile().toPath();
-    when(fileFinder.collect(any(Path.class))).thenReturn(Collections.singletonList(createInputFile(inputFile, false)));
+    Path basePath = temp.getRoot().toPath();
+    when(fileFinder.collect(any(Path.class))).thenReturn(Collections.singletonList(createInputFile(inputFile, basePath, false)));
     Path projectHome = temp.newFolder().toPath();
     sonarLint.runAnalysis(new HashMap<>(), new ReportFactory(StandardCharsets.UTF_8), fileFinder, projectHome);
 
@@ -92,7 +93,8 @@ public class StandaloneSonarLintTest {
     assertThat(htmlReport).doesNotExist();
   }
 
-  private static ClientInputFile createInputFile(final Path filePath, final boolean test) {
-    return new InputFileFinder.DefaultClientInputFile(filePath, test, StandardCharsets.UTF_8);
+  private static ClientInputFile createInputFile(final Path filePath, Path basePath, final boolean test) {
+
+    return new InputFileFinder.DefaultClientInputFile(filePath, basePath, test, StandardCharsets.UTF_8);
   }
 }
